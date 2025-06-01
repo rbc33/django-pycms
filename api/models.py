@@ -16,7 +16,7 @@ class GooseDbVersion(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'goose_db_version'
+        db_table = "goose_db_version"
 
 
 class Images(models.Model):
@@ -26,14 +26,14 @@ class Images(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'images'
+        db_table = "images"
 
 
-class Posts(models.Model):
+class Post(models.Model):
     content = models.TextField()
     title = models.TextField()
     excerpt = models.TextField()
 
     class Meta:
         managed = False
-        db_table = 'posts'
+        db_table = "posts"
