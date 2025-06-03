@@ -13,7 +13,7 @@ post = {
 print(post)
 
 make_post = requests.post(
-    "http://localhost:8081/posts",
+    "http://localhost:8000/posts",
     json=post,
     headers={"Content-type": "application/json"},
 )

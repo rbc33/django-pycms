@@ -6,8 +6,14 @@ from . import views
 app_name = "api"
 
 urlpatterns = [
-    path("", views.IndexView.as_view(), name="index"),
-    path("post/<int:post_id>/", views.Post_detailView.as_view(), name="post_detail"),
+    path("", views.index, name="index"),
+    path("post/<int:post_id>/", views.post_detail, name="post_detail"),
+    path("posts", views.PostsView.as_view(), name="posts_crud"),
+    path(
+        "posts/post/<int:post_id>/",
+        views.Post_detailView.as_view(),
+        name="post_detail_cruf",
+    ),
     path(
         "contact/",
         TemplateView.as_view(template_name="api/contact.html"),

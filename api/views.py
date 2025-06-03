@@ -10,11 +10,18 @@ from .forms import ContactForm
 from .serializers import PostSerializers
 
 
+def index(request):
+    posts = Post.objects.all()
+    return render(request, "api/index.html", {"posts": posts})
+
+
 # Create your views here.
-class IndexView(APIView):
-    def get(self, request):
-        posts = Post.objects.all()
-        return render(request, "api/index.html", {"posts": posts})
+class PostsView(APIView):
+    def get(self, request, format=None, *args, **kwargs):
+        post = Post.objects.all()
+        serializer = PostSerializers(post, many=True)
+
+        return Response(serializer.data)
 
     def post(self, request, format=None):
         serializer = PostSerializers(data=request.data)
@@ -24,16 +31,20 @@ class IndexView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+def post_detail(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    post.content_html = mark_safe(
+        markdown.markdown(post.content, extensions=["extra", "codehilite"])
+    )
+
+    if request.htmx:
+        return render(request, "api/partials/post_detail.html", {"post": post})
+    return render(request, "api/post.html", {"post": post})
+
+
 class Post_detailView(APIView):
     def get(self, request, post_id):
-        post = get_object_or_404(Post, id=post_id)
-        post.content_html = mark_safe(
-            markdown.markdown(post.content, extensions=["extra", "codehilite"])
-        )
-
-        if request.htmx:
-            return render(request, "api/partials/post_detail.html", {"post": post})
-        return render(request, "api/post.html", {"post": post})
+        return get_object_or_404(Post, id=post_id)
 
     def put(self, request, post_id, format=None):
         post = self.get_object(post_id)
